@@ -1,7 +1,7 @@
 // src/auth/AuthProvider.jsx
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext(null);
 
@@ -14,7 +14,7 @@ export default function AuthProvider({ children }) {
     const token = localStorage.getItem("id_token");
     if (!token) return null;
     try {
-      const payload = jwt_decode(token);
+      const payload = jwtDecode(token);
       // opcional: checar expiração
       if (payload.exp && payload.exp * 1000 < Date.now()) {
         localStorage.removeItem("id_token");
@@ -29,7 +29,7 @@ export default function AuthProvider({ children }) {
 
   const loginWithIdToken = (token) => {
     localStorage.setItem("id_token", token);
-    const payload = jwt_decode(token);
+    const payload = jwtDecode(token);
     setUser({ token, profile: payload });
   };
 
